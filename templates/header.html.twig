@@ -1,0 +1,32 @@
+{% set current_path = app.request.get('_route') %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Lebonangle</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link {{ (current_path == 'app_index') ? 'active' : '' }}" href="{{ path('app_index') }}">Accueil</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ path('api_entrypoint') }}">Api Publique</a></li>
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item">
+                    <div class="btn-group navbar-btn">
+                        <a  href="{{ path('app_admin_index') }}" class="nav-link {{ (current_path == 'app_admin_index') ? 'active' : '' }}">Administration</a>
+                        <button data-bs-toggle="dropdown" class="btn dropdown-toggle" aria-expanded="false"><span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('app_admin_user_index') }}">Admin User</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_advert_index') }}">Advert</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_category_index') }}">Category</a></li>
+                        </ul>
+                    </div>
+                </li>            {% endif %}
+            {% if is_granted('ROLE_USER') %}
+                <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a></li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link" href="{{ path('app_login') }}">Connexion</a></li>
+            {% endif %}
+
+        </ul>
+    </div>
+</nav>

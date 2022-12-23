@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>email</title>
+</head>
+<body>
+Bonjour,
+une nouvelle annonce à été postée sur le site Lebonangle.
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Content</th>
+        <th>Author</th>
+        <th>Email</th>
+        <th>Price</th>
+        <th>State</th>
+        <th>actions</th>
+        <th>publication</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{ advert.id }}</td>
+        <td>{{ advert.title }}</td>
+        <td>{{ advert.content }}</td>
+        <td>{{ advert.author }}</td>
+        <td>{{ advert.email }}</td>
+        <td>{{ advert.price }}</td>
+        <td>{{ advert.state }}</td>
+        <td>
+            <a href="{{ url('app_advert_show', {'id': advert.id}) }}">show</a>
+            {# <a href="{{ path('app_advert_edit', {'id': advert.id}) }}">edit</a> #}
+        </td>
+        <td>
+            {% if workflow_can(advert, 'publish') %}
+                <a href="{{ url('app_advert_publish', {'id': advert.id}) }}">publish</a>
+            {% endif %}
+            {% if workflow_can(advert, 'reject') %}
+                <a href="{{ url('app_advert_reject', {'id': advert.id}) }}">reject</a>
+            {% endif %}
+            {% if workflow_can(advert, 'unpublish') %}
+                <a href="{{ url('app_advert_unpublish', {'id': advert.id}) }}">unpublish</a>
+            {% endif %}
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

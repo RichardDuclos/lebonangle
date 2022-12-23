@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <h1>Administration lebonangle</h1>
+    <spanb>Gestion des données</spanb>
+    <ul>
+        <li><a href="{{ path('app_admin_user_index') }}">Admin User</a></li>
+        <li><a href="{{ path('app_advert_index') }}">Advert</a></li>
+        <li><a href="{{ path('app_category_index') }}">Category</a></li>
+        {# <li><a href="{{ path('app_picture_index') }}">Picture</a></li> #}
+    </ul>
+{% endblock body %}

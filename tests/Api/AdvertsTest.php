@@ -7,6 +7,7 @@ use App\Entity\Advert;
 use App\Entity\Category;
 use App\Entity\Picture;
 use App\Repository\AdvertRepository;
+use App\Repository\CategoryRepository;
 use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AdvertsTest extends ApiTestCase
 {
     private AdvertRepository $repository;
+    private CategoryRepository $categoryRepository;
 
 
     public function testGetCollection(): void
@@ -27,17 +29,20 @@ class AdvertsTest extends ApiTestCase
     public function testGetItem(): void
     {
         $this->repository = static::getContainer()->get('doctrine')->getRepository(Advert::class);
-
-        $fixture = new Advert();
-        $fixture->setTitle('Advert test');
-        $fixture->setContent('content');
-        $fixture->setAuthor('author');
-        $fixture->setEmail('email');
-        $fixture->setPrice(12);
-        $fixture->setState('rejected');
+        $this->categoryRepository = static::getContainer()->get('doctrine')->getRepository(Category::class);
+        $category = (new Category())
+            ->setName('test');
+        $this->categoryRepository->save($category, true);
+        $fixture = (new Advert())
+            ->setTitle('Advert test')
+            ->setContent('content')
+            ->setAuthor('author')
+            ->setEmail('email')
+            ->setPrice(12)
+            ->setState('rejected')
+            ->setPublishedAt(null)
+            ->setCategory($category);
         $fixture->setCreatedAt(new DateTimeImmutable());
-        $fixture->setPublishedAt(null);
-        $fixture->setCategory(null);
 
         $this->repository->save($fixture, true);
 
@@ -51,8 +56,14 @@ class AdvertsTest extends ApiTestCase
     {
         // penser a executer la commande suivante :
         // docker compose up mailer
-        $categoryIri = $this->findIriBy(Category::class, ['name' => 'Catégorie 1']);
-        $pictureIri = $this->findIriBy(Picture::class, ['filePath' => 'test']);
+        $this->categoryRepository = static::getContainer()->get('doctrine')->getRepository(Category::class);
+        $category = (new Category())
+            ->setName('test');
+        $picture = (new Picture())
+            ->setPath('test');
+        $this->categoryRepository->save($category, true);
+        $categoryIri = $this->findIriBy(Category::class, ['name' => 'test']);
+        $pictureIri = $this->findIriBy(Picture::class, ['path' => 'test']);
         $response = static::createClient()->request(Request::METHOD_POST, '/api/adverts', ['json' => [
             'title' => 'title',
             'content' => 'content',

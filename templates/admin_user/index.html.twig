@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil utilisateurs{% endblock %}
+
+{% block body %}
+    <h1>Accueil utilisateurs</h1>
+
+    {% for flashMessage in app.session.flashbag.get('delete_own') %}
+        <div class="alert alert-danger" role="alert">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom d'utilisateur</th>
+                <th>Email</th>
+                {# <th>Mot de passe</th> #}
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for admin_user in admin_users %}
+            <tr>
+                <td>{{ admin_user.id }}</td>
+                <td>{{ admin_user.username }}</td>
+                <td>{{ admin_user.email }}</td>
+                {# <td>{{ admin_user.password }}</td> #}
+                <td>
+                    <a href="{{ path('app_admin_user_show', {'id': admin_user.id}) }}">Plus d'informations</a>
+                    <a href="{{ path('app_admin_user_edit', {'id': admin_user.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">comment t'as accès à cette page ?</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_user_new') }}">Nouvel utilisateur</a>
+{% endblock %}

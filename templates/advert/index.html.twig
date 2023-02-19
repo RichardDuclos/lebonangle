@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil annonces{% endblock %}
+
+{% block body %}
+    <h1>Accueil annonces</h1>
+    {% for flashMessage in app.session.flashbag.get('publish_state') %}
+        <div class="alert alert-danger" role="alert">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Contenu</th>
+                <th>Auteur</th>
+                <th>Email</th>
+                <th>Prix</th>
+                <th>Etat</th>
+                <th>Date de publication</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for advert in pager %}
+            <tr>
+                <td>{{ advert.id }}</td>
+                <td>{{ advert.title }}</td>
+                <td>{{ advert.content }}</td>
+                <td>{{ advert.author }}</td>
+                <td>{{ advert.email }}</td>
+                <td>{{ advert.price }}</td>
+                <td>{{ advert.state }}</td>
+                <td>{{ advert.publishedAt ? advert.publishedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_advert_show', {'id': advert.id}) }}">Plus d'informations</a>
+                    {% if workflow_can(advert, 'publish') %}
+                    <a href="{{ path('app_advert_publish', {'id': advert.id}) }}">Publier</a>
+                    {% endif %}
+                    {% if workflow_can(advert, 'reject') %}
+                        <a href="{{ path('app_advert_reject', {'id': advert.id}) }}">Rejeter</a>
+                    {% endif %}
+                    {% if workflow_can(advert, 'unpublish') %}
+                        <a href="{{ path('app_advert_unpublish', {'id': advert.id}) }}">Annuler</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">Nouvelle annonce</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
